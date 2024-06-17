@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace CodeReviewAPI.Controllers;
 [ApiController]
@@ -27,5 +28,15 @@ public class WeatherForecastController : ControllerBase
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
+    }
+
+    [HttpPost("delete/{id}")]
+    public void Delete(uint id)
+    {
+        User user = _context.Users.FirstOrDefault(user => user.Id == id);
+        _context.Users.Remove(user);
+        _context.SaveChanges();
+        Debug.WriteLine($"The user with Login={user.Login} has been deleted.");
+        return Ok();
     }
 }
